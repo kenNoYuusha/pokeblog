@@ -1,55 +1,42 @@
-import { useParams, Link ,useNavigate} from "react-router-dom";
-import { pokemons } from "../js/arrayPokemon";
+import { NavLink, Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+// import { pokemons } from "../js/arrayPokemon";
 const Pokedex = () => {
-  const { pokemonName } = useParams();
-  const pokeInfo = pokemons.find((pokemon) => pokemon.slug === pokemonName) || {
-    slug: pokemonName,
-    name: "notFound",
-    img: "notFound",
-  };
+  const [pokemons, setPokemons] = useState([]);
 
+  useEffect(() => {
+    const getPokemons = async () => {
+      const result = await fetch(
+        "https://pokeapi.co/api/v2/pokemon?limit=386&offset=0"
+      );
+      const data = await result.json();
+      setPokemons(data.results);
+      console.log("peticiones");
+    };
+    getPokemons();
+  }, []);
   return (
-    <div className="relative w-full h-[85vh] grid place-items-center bg-slate-400 text-slate-900 font-bold text-3xl">
+    <div
+      className="w-full h-[85vh] grid grid-cols-[1fr_4fr] grid-rows-1  gap-x-4 p-4
+                    text-3xl font-bold text-slate-900 bg-slate-100"
+    >
       {/* NAVIGATION */}
-      <ul className="absolute top-6 left-6 flex gap-4 text-lg">
+      <ul className="flex flex-col gap-4 p-4 text-xl bg-slate-300 rounded-lg overflow-y-auto">
         {pokemons.map((pokemon) => (
-          <li key={pokemon.slug}>
-            <Link to={`/pokedex/${pokemon.slug}`}>{pokemon.name}</Link>
+          <li key={pokemon.name} className="w-full text-center">
+            <NavLink
+              to={`/pokedex/${pokemon.name}`}
+              className={({ isActive }) =>
+                isActive ? "block w-full py-2 bg-slate-400" 
+                         : "block w-full py-2 bg-slate-300"
+              }
+            >
+              {pokemon.name}
+            </NavLink>
           </li>
         ))}
       </ul>
-      {!pokemonName && <h2>Bienvenido a la pokedex</h2>}
-      {!!pokemonName && pokeInfo.name === "notFound" && (
-        <h2>No tenemos a {pokeInfo.slug} en nuestra base de datos</h2>
-      )}
-      {!!pokemonName && pokeInfo.name !== "notFound" && (
-        <PokeInfo pokeInfo={pokeInfo} />
-      )}
-    </div>
-  );
-};
-
-const PokeInfo = ({ pokeInfo: { name, type, img } }) => {
-  const navigate = useNavigate();
-  const getBack = () => {
-     navigate('/pokedex');
-  }  
-
-  return (
-    <div className="w-full h-full flex flex-col items-center gap-8 justify-center">
-      <h3>{name}</h3>
-      <p>{type}</p>
-      <figure className="w-[500px] h-[500px]">
-        <img className="w-full h-full object-contain" src={img} alt={name} />
-      </figure>
-      <button
-        className="px-4 py-2 text-xl text-slate-50 bg-orange-700 rounded-md shadow-lg 
-                       hover:bg-orange-800 
-                       active:bg-orange-900"
-        onClick={getBack}
-      >
-        Get back
-      </button>
+      <Outlet />
     </div>
   );
 };

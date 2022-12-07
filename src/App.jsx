@@ -8,6 +8,7 @@ import { Pokedex } from "./pages/Pokedex";
 //COMPONENTS
 import { Menu } from "./components/Menu";
 import { Footer } from "./components/Footer";
+import { PokeDetails } from "./components/PokeDetails";
 
 const App = () => {
   return (
@@ -18,8 +19,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/pokedex" element={<Pokedex />} />
-        <Route path="/pokedex/:pokemonName" element={<Pokedex />} />
+        <Route path="/pokedex" element={<Pokedex />} >
+          <Route path=":pokemonName" element={<PokeDetails />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
 
