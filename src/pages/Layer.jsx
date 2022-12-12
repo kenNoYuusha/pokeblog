@@ -24,11 +24,12 @@ const Layer = () => {
   }, []);
 
   return (
-    <main className="relative w-full h-screen p-4 grid grid-rows-[8%_85%_7%] grid-cols-1 bg-emerald-500">
+    <main className="relative w-full h-auto flex flex-col items-center p-4
+                   bg-slate-200">
       {isOffline && <Offline />}
-      <Menu />
+      
       <Outlet />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 };

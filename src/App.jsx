@@ -5,6 +5,7 @@ import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
 import { NotFound } from "./pages/NotFound";
 import { Pokedex } from "./pages/Pokedex";
+import { Pokemon } from "./pages/Pokemon";
 //COMPONENTS
 
 import { PokeDetails } from "./components/PokeDetails";
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/pokemon" element={<Pokemon />} />
           <Route path="/pokedex" element={<Pokedex />}>
             <Route path=":pokemonName" element={<PokeDetails />} />
           </Route>

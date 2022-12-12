@@ -3,7 +3,7 @@ export const getAllPokemon = async () => {
   try {
     //request process
     const result = await fetch(
-      "https://pokeapi.co/api/v2/pokemon?limit=386&offset=0"
+      "https://pokeapi.co/api/v2/pokemon?limit=151&offset=0"
     );
     //any kind of validation
     if (false) {
@@ -18,9 +18,9 @@ export const getAllPokemon = async () => {
   }
 };
 
-export const getPokemon = async (pokeName) => {
+export const getPokemon = async (url) => {
   try {
-    const result = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
+    const result = await fetch(url);
     //result.wathever do validations
     if (false) {
       throw new NetworkError("You're offline, can't catch pokemon");
