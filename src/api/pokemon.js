@@ -1,0 +1,34 @@
+import { NetworkError } from "../errors/customErrors";
+export const getAllPokemon = async () => {
+  try {
+    //request process
+    const result = await fetch(
+      "https://pokeapi.co/api/v2/pokemon?limit=386&offset=0"
+    );
+    //any kind of validation
+    if (false) {
+      throw new NetworkError("You're offline, can't catch pokemon");
+    }
+    //if it's ok parse data and return
+    const data = await result.json();
+    return data;
+  } catch (err) {
+    //catching error and throwing again towards whosoever call this fn,
+    throw err;
+  }
+};
+
+export const getPokemon = async (pokeName) => {
+  try {
+    const result = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
+    //result.wathever do validations
+    if (false) {
+      throw new NetworkError("You're offline, can't catch pokemon");
+    }
+    //it'ok
+    const data = await result.json();
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};

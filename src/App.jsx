@@ -6,26 +6,26 @@ import { Contact } from "./pages/Contact";
 import { NotFound } from "./pages/NotFound";
 import { Pokedex } from "./pages/Pokedex";
 //COMPONENTS
-import { Menu } from "./components/Menu";
-import { Footer } from "./components/Footer";
+
 import { PokeDetails } from "./components/PokeDetails";
+import { Layer } from "./pages/Layer";
 
 const App = () => {
   return (
     <HashRouter>
-      <Menu />
-
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/pokedex" element={<Pokedex />} >
-          <Route path=":pokemonName" element={<PokeDetails />} />
+        <Route element={<Layer />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pokedex" element={<Pokedex />}>
+            <Route path=":pokemonName" element={<PokeDetails />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <Footer />
+     
     </HashRouter>
   );
 };

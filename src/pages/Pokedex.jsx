@@ -1,23 +1,31 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { getAllPokemon } from "../api/pokemon";
+import { NetworkError } from "../errors/customErrors";
 // import { pokemons } from "../js/arrayPokemon";
 const Pokedex = () => {
   const [pokemons, setPokemons] = useState([]);
 
   useEffect(() => {
-    const getPokemons = async () => {
-      const result = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?limit=386&offset=0"
-      );
-      const data = await result.json();
-      setPokemons(data.results);
-      console.log("peticiones");
-    };
-    getPokemons();
+    getAllPokemon()
+      .then((data) => {
+        setPokemons(data.results);
+        //console.log(data);
+      })
+      .catch(handleErrors);
   }, []);
+
+  const handleErrors = (err) => {
+    if (err instanceof NetworkError) {
+      console.log(err);
+    } else {
+      console.log(err);
+    }
+  };
+
   return (
     <div
-      className="w-full h-[85vh] grid grid-cols-[1fr_4fr] grid-rows-1  gap-x-4 p-4
+      className="grid grid-cols-[1fr_4fr] grid-rows-1  gap-x-4 p-4
                     text-3xl font-bold text-slate-900 bg-slate-100"
     >
       {/* NAVIGATION */}
@@ -27,8 +35,9 @@ const Pokedex = () => {
             <NavLink
               to={`/pokedex/${pokemon.name}`}
               className={({ isActive }) =>
-                isActive ? "block w-full py-2 bg-slate-400" 
-                         : "block w-full py-2 bg-slate-300"
+                isActive
+                  ? "block w-full py-2 bg-slate-400"
+                  : "block w-full py-2 bg-slate-300"
               }
             >
               {pokemon.name}

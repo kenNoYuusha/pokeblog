@@ -4,8 +4,8 @@ import { routes } from "../js/arrayRoutes";
 const Footer = () => {
   return (
     <footer
-      className="w-full h-[7vh] flex justify-between items-center px-6 
-                     bg-slate-800 text-neutral-50 font-bold text-xl border-t-2 border-neutral-50"
+      className="flex justify-between items-center px-6 
+                     bg-slate-800 text-neutral-50 font-bold text-xl border-t-2 border-neutral-50 rounded-b-lg"
     >
       <p>Copyright Inc.</p>
       <ul className="flex gap-4">

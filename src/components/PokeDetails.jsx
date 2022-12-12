@@ -1,35 +1,34 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import { pokemons } from "../js/arrayPokemon";
+import { getPokemon } from "../api/pokemon";
+import { NetworkError } from "../errors/customErrors";
 const PokeDetails = () => {
   const [pokemon, setPokemon] = useState({});
   const { pokemonName } = useParams();
-  //   const {name, type, image} = pokemons.find((pokemon) => pokemon.slug === pokemonName) || {
-  //     slug: pokemonName,
-  //     type: "",
-  //     name: "No disponible",
-  //     img: "notFound",
-  //   };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getPokemon = async () => {
-      const result = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-      );
-      const data = await result.json();
-      const dataPokemon = {
-        id: data.id,
-        name: data.name,
-        type: data.types[0].type.name,
-        image: data.sprites.other["official-artwork"].front_default,
-      };
-      setPokemon(dataPokemon);
-    };
-    getPokemon();
-    console.log("pokemonnn");
+    getPokemon(pokemonName)
+      .then((data) => {
+        const dataPokemon = {
+          id: data.id,
+          name: data.name,
+          type: data.types[0].type.name,
+          image: data.sprites.other["official-artwork"].front_default,
+        };
+        setPokemon(dataPokemon);
+      })
+      .catch(handleErrors);
   }, [pokemonName]);
 
-  const navigate = useNavigate();
+  const handleErrors = (err) => {
+    if (err instanceof NetworkError) {
+      console.log(err);
+    } else {
+      console.log(err);
+    }
+  };
+
   const getBack = () => {
     navigate("/pokedex");
   };
@@ -48,7 +47,7 @@ const PokeDetails = () => {
         <img
           className="w-full h-full object-contain transition-transform duration-100 ease-in-out hover:scale-110 hover:rotate-3"
           src={pokemon.image}
-          alt={name}
+          alt={pokemon.name}
         />
       </figure>
       <button
