@@ -10,6 +10,7 @@ import { Pokemon } from "./pages/Pokemon";
 
 import { PokeDetails } from "./components/PokeDetails";
 import { Layer } from "./pages/Layer";
+import { PokeInfo } from "./pages/PokeInfo";
 
 const App = () => {
   return (
@@ -19,15 +20,15 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/pokemon" element={<Pokemon />} />
+          <Route path="/pokemon" element={<Pokemon />}>
+            <Route path=":pokemonName" element={<PokeInfo />} />
+          </Route>
           <Route path="/pokedex" element={<Pokedex />}>
             <Route path=":pokemonName" element={<PokeDetails />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-
-     
     </HashRouter>
   );
 };

@@ -32,3 +32,18 @@ export const getPokemon = async (url) => {
     throw err;
   }
 };
+
+export const getResource = async (url) => {
+  try {
+    const result = await fetch(url);
+    //result.wathever do validations
+    if (false) {
+      throw new NetworkError("You're offline, can't catch pokemon");
+    }
+    //it'ok
+    const data = await result.json();
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};

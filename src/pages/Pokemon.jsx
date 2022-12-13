@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Outlet, Link } from "react-router-dom";
 import { getAllPokemon, getPokemon } from "../api/pokemon";
 const Pokemon = () => {
   const [pokemonList, setPokemonList] = useState([]);
@@ -25,6 +26,7 @@ const Pokemon = () => {
         //console.log(list);
         setPokemonList(list);
         setLoading(false);
+        console.log("si cargo las imagenes wey");
       } catch (error) {
         console.log("error atrapadooo", error);
         console.log(error.message);
@@ -36,13 +38,16 @@ const Pokemon = () => {
   }, []);
 
   return (
-    <div className="w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4">
-      {!loading &&
-        pokemonList.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} />
-        ))}
-      {!!loading && <PokemonSkeleton />}
-    </div>
+    <>
+      <div className="w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4">
+        {!loading &&
+          pokemonList.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))}
+        {!!loading && <PokemonSkeleton />}
+      </div>
+      <Outlet />
+    </>
   );
 };
 export { Pokemon };
@@ -50,15 +55,20 @@ export { Pokemon };
 const PokemonCard = ({ pokemon: { img, id, name, type } }) => {
   return (
     <div className="flex flex-col items-center gap-4">
-      <figure
-        className="bg-slate-50 p-4 rounded-lg shadow-md will-change-transform
-                     hover:animate-wiggle hover:cursor-pointer"
-      >
-        <img className="object-contain object-center" src={img} alt={name} />
-        <figcaption className="font-bold text-lg text-slate-900">{`#${id}`}</figcaption>
-      </figure>
+      <Link to={`/pokemon/${name}`}>
+        <figure
+          className="bg-slate-50 p-4 rounded-lg shadow-md will-change-transform
+                     hover:animate-wiggle hover:cursor-pointer
+                     dark:bg-slate-900"
+        >
+          <img className="object-contain object-center" src={img} alt={name} />
+          <figcaption className="font-bold text-lg text-slate-900 dark:text-slate-50">{`#${id}`}</figcaption>
+        </figure>
+      </Link>
       <div className="self-start">
-        <h3 className="text-xl font-bold capitalize">{name}</h3>
+        <h3 className="text-xl font-bold text-slate-900 capitalize dark:text-slate-50">
+          {name}
+        </h3>
         <div className="flex gap-1 mt-2">
           {type.map((item) => (
             <PokemonTagType key={item.type.name} type={item.type.name} />
@@ -69,19 +79,61 @@ const PokemonCard = ({ pokemon: { img, id, name, type } }) => {
   );
 };
 const PokemonSkeleton = () => {
-  return(
-    <><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard />
-    <SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /><SkeletonPokemonCard /></>
-  )
-}
+  return (
+    <>
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+      <SkeletonPokemonCard />
+    </>
+  );
+};
 const SkeletonPokemonCard = () => {
   return (
     <div className="flex flex-col items-center gap-4">
@@ -92,19 +144,19 @@ const SkeletonPokemonCard = () => {
       </div>
       {/* Description */}
       <div className="self-start">
-
-        <h3 className="w-32 text-xl text-transparent bg-zinc-500 animate-pulse">A</h3>
+        <h3 className="w-32 text-xl text-transparent bg-zinc-500 animate-pulse">
+          A
+        </h3>
 
         <div className="flex gap-1 mt-2">
-          <p
-            className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse"
-          >B</p>
-          <p
-            className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse"
-          >C</p>
+          <p className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse">
+            B
+          </p>
+          <p className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse">
+            C
+          </p>
         </div>
       </div>
-
     </div>
   );
 };
