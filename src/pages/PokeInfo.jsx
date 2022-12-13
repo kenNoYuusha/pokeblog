@@ -6,11 +6,10 @@ const PokeInfo = () => {
   const { pokemonName } = useParams();
   const [pokemonInfo, setPokemonInfo] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({ isTrue: false });
   useEffect(() => {
     const getPokemonInfo = async () => {
       try {
-        //setLoading(true);
         //getting basic info
         const pokemonData = {};
         const basicInfo = await getPokemon(
@@ -53,33 +52,42 @@ const PokeInfo = () => {
         setPokemonInfo(pokemonData);
         setLoading(false);
       } catch (err) {
-        console.log(err);
-        setError(err);
-        setLoading(false);
+        setError({ isTrue: true, name: err.name, message: err.message });
       }
     };
     getPokemonInfo();
+    
   }, [pokemonName]);
-  const { id, name, image, description, varieties, evolutionChain } = pokemonInfo;
-  console.log(pokemonInfo);
+  const { id, name, image, description, varieties, evolutionChain } =
+    pokemonInfo;
+  //console.log(pokemonInfo);
 
   return (
     <div
       className="fixed top-0 left-0 w-full min-h-screen h-auto bg-slate-700/80
                         flex flex-col items-center "
     >
-      {!!error && <p className="text-3xl font-bold text-white">Hubo un error wey!</p>}
+      {error.isTrue && (
+        <div className="text-3xl font-bold text-white">
+          <p>{error.name}</p>
+          <p>{error.message}</p>
+        </div>
+      )}
 
-      {!error && !!loading && <p className="text-6xl font-bold text-white">Cargandooo......</p>}
+      {!error.isTrue && !!loading && (
+        <p className="text-6xl font-bold text-white">Cargandooo......</p>
+      )}
 
-      {!error && !loading && (
+      {!error.isTrue && !loading && (
         <>
           <p className="text-6xl font-bold text-white">
             <span>#{id}</span>
             {name}
           </p>
           <img src={image} alt={name} />
-          <p className="text-6xl font-bold text-white">{description.flavor_text}</p>
+          <p className="text-6xl font-bold text-white">
+            {description.flavor_text}
+          </p>
         </>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { NetworkError } from "../errors/customErrors";
+import { handleWrongResponses } from "../js/handleErrors"
 export const getAllPokemon = async () => {
   try {
     //request process
@@ -6,8 +6,8 @@ export const getAllPokemon = async () => {
       "https://pokeapi.co/api/v2/pokemon?limit=151&offset=0"
     );
     //any kind of validation
-    if (false) {
-      throw new NetworkError("You're offline, can't catch pokemon");
+    if (!result.ok) {
+      handleWrongResponses(result);
     }
     //if it's ok parse data and return
     const data = await result.json();
@@ -22,8 +22,8 @@ export const getPokemon = async (url) => {
   try {
     const result = await fetch(url);
     //result.wathever do validations
-    if (false) {
-      throw new NetworkError("You're offline, can't catch pokemon");
+    if (!result.ok) {
+      handleWrongResponses(result);
     }
     //it'ok
     const data = await result.json();
@@ -37,8 +37,8 @@ export const getResource = async (url) => {
   try {
     const result = await fetch(url);
     //result.wathever do validations
-    if (false) {
-      throw new NetworkError("You're offline, can't catch pokemon");
+    if (!result.ok) {
+      handleWrongResponses(result);
     }
     //it'ok
     const data = await result.json();

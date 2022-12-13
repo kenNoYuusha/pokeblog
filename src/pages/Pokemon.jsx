@@ -4,6 +4,7 @@ import { getAllPokemon, getPokemon } from "../api/pokemon";
 const Pokemon = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState({ isTrue: false });
 
   useEffect(() => {
     const fetchAllPokemon = async () => {
@@ -26,10 +27,9 @@ const Pokemon = () => {
         //console.log(list);
         setPokemonList(list);
         setLoading(false);
-        
-      } catch (error) {
-        console.log("error atrapadooo", error);
-        console.log(error.message);
+      } catch (err) {
+        setError({ isTrue: true, message: err.message, name: err.name });
+        //setLoading(false);
       }
 
       // getPokemon
@@ -40,11 +40,18 @@ const Pokemon = () => {
   return (
     <>
       <div className="w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4">
-        {!loading &&
+        {error.isTrue && (
+          <div>
+            <p>Name: {error.name}</p>
+            <p>Message: {error.message}</p>
+          </div>
+        )}
+        {!error.isTrue && !!loading && <PokemonSkeleton />}
+        {!error.isTrue &&
+          !loading &&
           pokemonList.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
           ))}
-        {!!loading && <PokemonSkeleton />}
       </div>
       <Outlet />
     </>
