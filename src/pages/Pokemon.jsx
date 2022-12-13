@@ -26,7 +26,7 @@ const Pokemon = () => {
         //console.log(list);
         setPokemonList(list);
         setLoading(false);
-        console.log("si cargo las imagenes wey");
+        
       } catch (error) {
         console.log("error atrapadooo", error);
         console.log(error.message);
