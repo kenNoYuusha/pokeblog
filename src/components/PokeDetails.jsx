@@ -8,7 +8,7 @@ const PokeDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getPokemon(pokemonName)
+    getPokemon(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
       .then((data) => {
         const dataPokemon = {
           id: data.id,
