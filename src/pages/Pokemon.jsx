@@ -145,21 +145,21 @@ const SkeletonPokemonCard = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Image */}
-      <div className="w-full h-auto bg-zinc-500 p-4 animate-pulse">
+      <div className="w-full h-auto bg-zinc-500 p-4 rounded-lg animate-pulse">
         <div className="w-full aspect-square"></div>
         <p className="text-lg text-transparent">1</p>
       </div>
       {/* Description */}
       <div className="self-start">
-        <h3 className="w-32 text-xl text-transparent bg-zinc-500 animate-pulse">
+        <h3 className="w-32 text-xl text-transparent bg-zinc-500 rounded-md animate-pulse">
           A
         </h3>
 
         <div className="flex gap-1 mt-2">
-          <p className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse">
+          <p className="px-10 py-[1px] text-transparent bg-zinc-500 rounded-md animate-pulse">
             B
           </p>
-          <p className="px-10 py-[1px] text-transparent bg-zinc-500 animate-pulse">
+          <p className="px-10 py-[1px] text-transparent bg-zinc-500 rounded-md animate-pulse">
             C
           </p>
         </div>

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Children } from "react";
 import { getPokemon, getResource } from "../api/pokemon";
 
 const PokeInfo = () => {
@@ -61,7 +61,7 @@ const PokeInfo = () => {
   const { id, name, image, description, varieties, evolutionChain } =
     pokemonInfo;
   //console.log(pokemonInfo);
-
+  console.log(evolutionChain);
   return (
     <div
       className="fixed top-0 left-0 w-full min-h-screen h-auto bg-slate-700/80
@@ -81,16 +81,52 @@ const PokeInfo = () => {
       {!error.isTrue && !loading && (
         <>
           <p className="text-6xl font-bold text-white">
-            <span>#{id}</span>
-            {name}
+            {`#${id} ${name}`}
           </p>
           <img src={image} alt={name} />
           <p className="text-6xl font-bold text-white">
             {description.flavor_text}
           </p>
+          <EvolutionChain chain={evolutionChain} />
         </>
       )}
     </div>
   );
 };
+
+const EvolutionChain = ({chain}) => {
+  return(
+    <BindingElements chain={chain}>
+      {(character) => <p>{character}</p> }
+    </BindingElements>
+  )
+    
+}
+
+const BindingElements = (props) => {
+ 
+  let items = []
+
+  
+  const loopChain = (chain) => {
+
+    if(chain.hasOwnProperty("evolvesTo")){
+      items.push(props.children(chain.name))
+      items.push(props.children(">>>>>"))
+      //validar si es array o no
+      if(Array.isArray(chain.evolvesTo)){
+        chain.evolvesTo.forEach(item => loopChain(item))
+      } else {
+        loopChain(chain.evolvesTo)
+      }
+    } else {
+      items.push(props.children(chain.name))
+    }
+  }
+  loopChain(props.chain)
+
+
+  return <div className="text-3xl font-bold text-white flex gap-4">{items}</div>
+}
+
 export { PokeInfo };
