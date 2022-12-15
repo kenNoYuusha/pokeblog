@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
 import { getAllPokemon, getPokemon } from "../api/pokemon";
-const Pokemon = () => {
+export const Pokemon = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({ isTrue: false });
+  const [display, setDisplay] = useState(true);
 
   useEffect(() => {
     const fetchAllPokemon = async () => {
@@ -29,7 +30,6 @@ const Pokemon = () => {
         setLoading(false);
       } catch (err) {
         setError({ isTrue: true, message: err.message, name: err.name });
-        //setLoading(false);
       }
 
       // getPokemon
@@ -37,29 +37,36 @@ const Pokemon = () => {
     fetchAllPokemon();
   }, []);
 
+  
+
   return (
     <>
-      <div className="w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4">
-        {error.isTrue && (
-          <div>
-            <p>Name: {error.name}</p>
-            <p>Message: {error.message}</p>
-          </div>
-        )}
-        {!error.isTrue && !!loading && <PokemonSkeleton />}
-        {!error.isTrue &&
-          !loading &&
-          pokemonList.map((pokemon) => (
-            <PokemonCard key={pokemon.id} pokemon={pokemon} />
-          ))}
-      </div>
-      <Outlet />
+      
+        <div className={`w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4 ${!display && 'hidden'}`}>
+          {error.isTrue && (
+            <div>
+              <p>Name: {error.name}</p>
+              <p>Message: {error.message}</p>
+            </div>
+          )}
+          {!error.isTrue && !!loading && (
+            <PokemonSkeleton amount={151}>
+              {(index) => <SkeletonPokemonCard key={index} />}
+            </PokemonSkeleton>
+          )}
+          {!error.isTrue &&
+            !loading &&
+            pokemonList.map((pokemon) => (
+              <PokemonCard key={pokemon.id} pokemon={pokemon} />
+            ))}
+        </div>
+      
+      <Outlet context={setDisplay}/>
     </>
   );
 };
-export { Pokemon };
 
-const PokemonCard = ({ pokemon: { img, id, name, type } }) => {
+export const PokemonCard = ({ pokemon: { img, id, name, type } }) => {
   return (
     <div className="flex flex-col items-center gap-4">
       <Link to={`/pokemon/${name}`}>
@@ -85,61 +92,14 @@ const PokemonCard = ({ pokemon: { img, id, name, type } }) => {
     </div>
   );
 };
-const PokemonSkeleton = () => {
-  return (
-    <>
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-      <SkeletonPokemonCard />
-    </>
-  );
+const PokemonSkeleton = ({ children, amount }) => {
+  const skeleton = [];
+
+  for (let index = 1; index <= amount; index++) {
+    skeleton.push(children(index));
+  }
+
+  return skeleton;
 };
 const SkeletonPokemonCard = () => {
   return (
@@ -168,7 +128,7 @@ const SkeletonPokemonCard = () => {
   );
 };
 
-const PokemonTagType = ({ type }) => {
+export const PokemonTagType = ({ type }) => {
   switch (type) {
     case "grass":
       return (

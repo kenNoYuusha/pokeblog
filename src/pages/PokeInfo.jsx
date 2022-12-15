@@ -1,12 +1,14 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect, Children } from "react";
+import { useParams, Link, useOutletContext } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { getPokemon, getResource } from "../api/pokemon";
+import { PokemonTagType } from "./Pokemon";
 
 const PokeInfo = () => {
   const { pokemonName } = useParams();
   const [pokemonInfo, setPokemonInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({ isTrue: false });
+  const setDisplay = useOutletContext();
   useEffect(() => {
     const getPokemonInfo = async () => {
       try {
@@ -34,6 +36,7 @@ const PokeInfo = () => {
 
         const loopChain = (chain) => {
           let obj = {};
+
           if (!chain.evolves_to.length) {
             obj.name = chain.species.name;
             return obj;
@@ -56,16 +59,16 @@ const PokeInfo = () => {
       }
     };
     getPokemonInfo();
-    
+    setDisplay(false);
+    return(() => setDisplay(true))
   }, [pokemonName]);
   const { id, name, image, description, varieties, evolutionChain } =
     pokemonInfo;
   //console.log(pokemonInfo);
-  console.log(evolutionChain);
   return (
     <div
-      className="fixed top-0 left-0 w-full min-h-screen h-auto bg-slate-700/80
-                        flex flex-col items-center "
+      className="absolute top-0 left-0 w-full min-h-screen h-auto bg-slate-700/80 overflow-y-scroll
+                 grid grid-rows-6 grid-cols-5 p-20"
     >
       {error.isTrue && (
         <div className="text-3xl font-bold text-white">
@@ -80,53 +83,132 @@ const PokeInfo = () => {
 
       {!error.isTrue && !loading && (
         <>
-          <p className="text-6xl font-bold text-white">
-            {`#${id} ${name}`}
-          </p>
-          <img src={image} alt={name} />
-          <p className="text-6xl font-bold text-white">
+          <h3
+            className="col-start-1 col-end-6 row-start-1 row-end-2 grid place-items-center
+          text-6xl font-bold text-white"
+          >{`#${id} ${name}`}</h3>
+
+          <figure className="col-start-1 col-end-4 row-start-2 row-end-5 grid place-items-center p-10">
+            <img
+              className="object-contain object-center"
+              src={image}
+              alt={name}
+            />
+          </figure>
+          <p
+            className="col-start-4 col-end-6 row-start-2 row-end-5 grid place-items-center p-10
+          text-3xl font-bold text-white"
+          >
             {description.flavor_text}
           </p>
-          <EvolutionChain chain={evolutionChain} />
+
+          <div className="col-start-1 col-end-6 row-start-5 row-end-7 grid place-items-center gap-4">
+            <h4 className="text-white text-xl font-bold">Evolution Chaine</h4>
+            <div className="flex flex-row gap-x-8 justify-center items-center">
+              <EvolutionChain
+                chain={evolutionChain}
+                direction={() => <p>-----</p>}
+              >
+                {(character) => (
+                  <PokemonCardChain key={character} pokeName={character} />
+                )}
+              </EvolutionChain>
+            </div>
+          </div>
         </>
       )}
     </div>
   );
 };
 
-const EvolutionChain = ({chain}) => {
-  return(
-    <BindingElements chain={chain}>
-      {(character) => <p>{character}</p> }
-    </BindingElements>
-  )
-    
-}
-
-const BindingElements = (props) => {
- 
-  let items = []
-
-  
+const EvolutionChain = (props) => {
+  let items = [];
   const loopChain = (chain) => {
-
-    if(chain.hasOwnProperty("evolvesTo")){
-      items.push(props.children(chain.name))
-      items.push(props.children(">>>>>"))
+    if (chain.hasOwnProperty("evolvesTo")) {
+      items.push(props.children(chain.name));
+      //items.push(props.direction());
       //validar si es array o no
-      if(Array.isArray(chain.evolvesTo)){
-        chain.evolvesTo.forEach(item => loopChain(item))
+      if (Array.isArray(chain.evolvesTo)) {
+        chain.evolvesTo.forEach((item) => loopChain(item));
       } else {
-        loopChain(chain.evolvesTo)
+        loopChain(chain.evolvesTo);
       }
     } else {
-      items.push(props.children(chain.name))
+      items.push(props.children(chain.name));
     }
-  }
-  loopChain(props.chain)
+  };
+  loopChain(props.chain);
 
+  return items;
+};
 
-  return <div className="text-3xl font-bold text-white flex gap-4">{items}</div>
-}
+const PokemonCardChain = ({ pokeName }) => {
+  const [state, setState] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState({ isError: false });
+  const { img, id, name, type } = state;
+
+  useEffect(() => {
+    const getPokemonChain = async () => {
+      try {
+        const detailsPokemon = await getPokemon(
+          `https://pokeapi.co/api/v2/pokemon/${pokeName}`
+        );
+        const dataPokemon = {
+          id: detailsPokemon.id,
+          name: detailsPokemon.name,
+          type: detailsPokemon.types,
+          img: detailsPokemon.sprites.other["official-artwork"].front_default,
+        };
+
+        setState(dataPokemon);
+        setLoading(false);
+      } catch (err) {
+        setError({ isError: true, name: err.name, message: err.message });
+      }
+    };
+    getPokemonChain();
+  }, []);
+
+  return (
+    <div className="w-80 h-96 flex flex-col items-center gap-4">
+      {error.isError && (
+        <div>
+          <p>{error.name}</p>
+          <p>{error.message}</p>
+        </div>
+      )}
+      {!error.isError && !!loading && <p>Estamos Cargando....</p>}
+      {!error.isError && !loading && (
+        <>
+          <Link to={`/pokemon/${name}`}>
+            <figure
+              className="bg-slate-50 p-4 rounded-lg shadow-md will-change-transform
+                     hover:animate-wiggle hover:cursor-pointer
+                     dark:bg-slate-900"
+            >
+              <img
+                className="object-contain object-center"
+                src={img}
+                alt={name}
+              />
+              <figcaption className="font-bold text-lg text-slate-900 dark:text-slate-50">{`#${id}`}</figcaption>
+            </figure>
+          </Link>
+          <div className="self-start">
+            <h3 className="text-xl font-bold text-slate-900 capitalize dark:text-slate-50">
+              {name}
+            </h3>
+            <div className="flex gap-1 mt-2">
+              {type.map((item) => (
+                <PokemonTagType key={item.type.name} type={item.type.name} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export { PokeInfo };
