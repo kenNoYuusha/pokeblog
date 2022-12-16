@@ -1,14 +1,14 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getPokemon, getResource } from "../api/pokemon";
-import { PokemonTagType } from "./Pokemon";
+import { PokemonTagType } from "../components/PokemonTagType";
 
 const PokeInfo = () => {
   const { pokemonName } = useParams();
   const [pokemonInfo, setPokemonInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({ isTrue: false });
-  const setDisplay = useOutletContext();
+
   useEffect(() => {
     const getPokemonInfo = async () => {
       try {
@@ -59,8 +59,7 @@ const PokeInfo = () => {
       }
     };
     getPokemonInfo();
-    setDisplay(false);
-    return(() => setDisplay(true))
+   
   }, [pokemonName]);
   const { id, name, image, description, varieties, evolutionChain } =
     pokemonInfo;
