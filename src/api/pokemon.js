@@ -18,9 +18,9 @@ export const getAllPokemon = async () => {
   }
 };
 
-export const getPokemon = async (url) => {
+export const getPokemon = async (pokemonName) => {
   try {
-    const result = await fetch(url);
+    const result = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
     //result.wathever do validations
     if (!result.ok) {
       handleWrongResponses(result);

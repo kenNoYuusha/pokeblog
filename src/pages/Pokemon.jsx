@@ -18,7 +18,7 @@ export const Pokemon = () => {
         const pokemonNames = await getAllPokemon();
 
         for (const pokemonObject of pokemonNames.results) {
-          const pokemonData = await getPokemon(pokemonObject.url);
+          const pokemonData = await getPokemon(pokemonObject.name);
           pokemonList.push({
             id: pokemonData.id,
             name: pokemonData.name,
