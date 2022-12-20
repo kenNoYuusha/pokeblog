@@ -1,9 +1,17 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useOutletContext } from "react-router-dom";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
+//OTHERS
 import { getPokemon, getResource } from "../api/pokemon";
+import { parsePokemonChain, singleArrayChain } from "../js/utilities";
+//COMPONENTS
 import { PokemonCard } from "../components/PokemonCard";
+import { PokemonContainerDetails } from "../components/PokemonContainerDetails";
+import { PokemonError } from "../components/PokemonError";
 
 export const PokemonDetails = () => {
+  //const renderCount = useRef("")
+  const setDisplayParent = useOutletContext();
   const { pokemonName } = useParams();
   const [error, setError] = useState({ isError: false });
   const [loading, setLoading] = useState(true);
@@ -12,7 +20,6 @@ export const PokemonDetails = () => {
   useEffect(() => {
     const getPokemonDetails = async () => {
       try {
-        
         //getting basic info
         const pokemonDetails = {};
         const basicInfo = await getPokemon(pokemonName);
@@ -29,37 +36,27 @@ export const PokemonDetails = () => {
         pokemonDetails.varieties = speciesInfo.varieties.map(
           (item) => item.pokemon.name
         );
-        
+
         //getting evolution chain
         const evolutionChain = await getResource(
           speciesInfo.evolution_chain.url
         );
-        pokemonDetails.evolutionChainNames = [];
-        const getChain = (chain) => {
-          if (!chain.evolves_to.length) {
-            pokemonDetails.evolutionChainNames.push(chain.species.name);
-            return;
-          }
-          pokemonDetails.evolutionChainNames.push(chain.species.name);
-          //en este punto se deberia insertar algun indicador tipo flecha
-          //que representa cierto pokemon evoluciona a:
-          chain.evolves_to.length > 1
-            ? chain.evolves_to.forEach((item) => getChain(item))
-            : getChain(chain.evolves_to[0]);
-        };
-        getChain(evolutionChain.chain);
+        pokemonDetails.evolutionChainNames = parsePokemonChain(
+          evolutionChain.chain
+        );
 
         //getting details of evolutions
-        pokemonDetails.evolutionDetails = [];
-        for(const pokemon of pokemonDetails.evolutionChainNames){
+        pokemonDetails.evolutionDetails = {};
+        const arrayPokemonNames = singleArrayChain(evolutionChain.chain);
+        for (const pokemon of arrayPokemonNames) {
           const pokemonDataChain = await getPokemon(pokemon);
-          pokemonDetails.evolutionDetails.push({
+          pokemonDetails.evolutionDetails[pokemon] = {
             id: pokemonDataChain.id,
             name: pokemonDataChain.name,
             type: pokemonDataChain.types,
             img: pokemonDataChain.sprites.other["official-artwork"]
               .front_default,
-          })
+          };
         }
 
         setPokemonInfo(pokemonDetails);
@@ -69,56 +66,20 @@ export const PokemonDetails = () => {
       }
     };
     getPokemonDetails();
-  }, [pokemonName]);
-  const { id, name, image, description, evolutionDetails, varieties} =
-    pokemonInfo;
-  //console.log(pokemonInfo);
+    setDisplayParent((state) => ({ ...state, display: false }));
+    return () => setDisplayParent((state) => ({ ...state, display: true }));
+  }, [pokemonName])
+ 
   return (
-    <div
-      className="absolute top-0 left-0 w-full min-h-screen h-auto bg-slate-700/80 overflow-y-scroll
-                 grid grid-rows-6 grid-cols-5 p-20"
-    >
-      {error.isError && (
-        <div className="text-3xl font-bold text-white">
-          <p>{error.name}</p>
-          <p>{error.message}</p>
-        </div>
+    <PokemonContainerDetails
+      error={error}
+      loading={loading}
+      pokemonInfo={pokemonInfo}
+      pokemonCard={(pokemon) => (
+        <PokemonCard key={pokemon.id} pokemon={pokemon} />
       )}
-
-      {!error.isError && loading && (
-        <p className="text-6xl font-bold text-white">Cargandooo......</p>
-      )}
-
-      {!error.isError && !loading && (
-        <>
-          <h3
-            className="col-start-1 col-end-6 row-start-1 row-end-2 grid place-items-center
-          text-6xl font-bold text-white"
-          >{`#${id} ${name}`}</h3>
-
-          <figure className="col-start-1 col-end-4 row-start-2 row-end-5 grid place-items-center p-10">
-            <img
-              className="object-contain object-center"
-              src={image}
-              alt={name}
-            />
-          </figure>
-          <p
-            className="col-start-4 col-end-6 row-start-2 row-end-5 grid place-items-center p-10
-          text-3xl font-bold text-white"
-          >
-            {description.flavor_text}
-          </p>
-
-          <div className="col-start-1 col-end-6 row-start-5 row-end-7 grid place-items-center gap-4">
-            <h4 className="text-white text-xl font-bold">Evolution Chaine</h4>
-            <div className="flex flex-row gap-x-8 justify-center items-center">
-              {evolutionDetails.map(pokemon => <PokemonCard key={pokemon.id} pokemon={pokemon} />)}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+      pokemonError={(error) => <PokemonError error={error} />}
+      arrow={() => <MdOutlineArrowForwardIos />}
+    />
   );
 };
-

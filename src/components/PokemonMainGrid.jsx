@@ -1,11 +1,11 @@
 export const PokemonMainGrid = ({
-  state: { error, loading, pokemonList },
+  state: { error, loading, display, pokemonList },
   children,
   skeleton,
   error: pokemonError,
 }) => {
   return (
-    <div className="w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4">
+    <div className={`${display ? "grid" : "hidden"} w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 p-4 text-lg`}>
       {error.isError && pokemonError(error)}
       {!error.isError && loading && (
         <PokemonSkeleton amount={151}>{skeleton}</PokemonSkeleton>

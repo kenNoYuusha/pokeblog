@@ -24,7 +24,7 @@ const Layer = () => {
   }, []);
 
   return (
-    <main className="relative w-full h-auto flex flex-col items-center p-4
+    <main className="relative w-full h-auto flex flex-col items-center 
                    bg-slate-200
                    dark:bg-slate-700">
       {isOffline && <Offline />}

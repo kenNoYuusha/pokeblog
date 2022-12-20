@@ -8,6 +8,7 @@ export const Pokemon = () => {
   const [state, setState] = useState({
     error: { isError: false },
     loading: true,
+    display: true,
     pokemonList: [],
   });
  
@@ -52,7 +53,7 @@ export const Pokemon = () => {
         {(pokemon) => <PokemonCard key={pokemon.id} pokemon={pokemon} />}
       </PokemonMainGrid>
 
-      <Outlet />
+      {!state.loading && <Outlet context={setState}/>}
     </>
   );
 };
