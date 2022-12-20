@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import { Menu } from "../components/Menu";
-import { Footer } from "../components/Footer";
+import { PokeNav } from "../components/PokeNav";
 import { useEffect, useState } from "react";
 
 const Layer = () => {
   const [isOffline, setIsOffline] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const setOnline = () => {
     setIsOffline(false);
@@ -24,14 +24,16 @@ const Layer = () => {
   }, []);
 
   return (
-    <main className="relative w-full h-auto flex flex-col items-center 
-                   bg-slate-200
-                   dark:bg-slate-700">
-      {isOffline && <Offline />}
-      
-      <Outlet />
-      {/* <Footer /> */}
-    </main>
+    <div className={`block ${darkMode && "dark"}`}>
+      <div className="bg-slate-200 dark:bg-slate-700">
+        <PokeNav darkMode={darkMode} setDarkMode={setDarkMode} />
+        <main className="relative w-full h-auto flex flex-col items-center">
+          {isOffline && <Offline />}
+
+          <Outlet />
+        </main>
+      </div>
+    </div>
   );
 };
 
