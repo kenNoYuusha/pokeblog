@@ -25,6 +25,7 @@ export const PokemonDetails = () => {
         const basicInfo = await getPokemon(pokemonName);
         pokemonDetails.id = basicInfo.id;
         pokemonDetails.name = basicInfo.name;
+        pokemonDetails.type = basicInfo.types;
         pokemonDetails.image =
           basicInfo.sprites.other["official-artwork"].front_default;
 
