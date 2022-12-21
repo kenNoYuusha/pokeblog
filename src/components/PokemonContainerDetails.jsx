@@ -1,6 +1,7 @@
 import { MdOutlineClose } from "react-icons/md";
+import { emblemas } from "../js/emblemas";
 import { useNavigate } from "react-router-dom";
-import { PokemonTagType } from "../components/PokemonTagType"
+import { PokemonTagType } from "../components/PokemonTagType";
 export const PokemonContainerDetails = ({
   error,
   loading,
@@ -58,9 +59,18 @@ export const PokemonContainerDetails = ({
               />
             </figure>
             <div className="basis-96 p-4 ">
-              <p className="mb-10 text-xl leading-10">{description.flavor_text}</p>
+              <p className="mb-10 text-xl leading-10">
+                {description.flavor_text}
+              </p>
               <div className="flex gap-x-4 text-lg">
-                 {type.map(item => (<PokemonTagType type={item.type.name}/>))}
+                {type.map((item) => (
+                  <figure className="basis-24" key={item.type.name}>
+                    <img
+                      src={emblemas[item.type.name]}
+                      alt={`emblema de ${item.type.name}`}
+                    />
+                  </figure>
+                ))}
               </div>
             </div>
           </div>
