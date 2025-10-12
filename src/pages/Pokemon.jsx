@@ -1,11 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { useRef } from "react";
 import { PokemonMainGrid } from "../components/PokemonMainGrid";
 import { PokemonCard, PokemonCardSkeleton } from "../components/PokemonCard";
 import { PokemonError } from "../components/PokemonError";
 import { usePokemonList } from "../hooks/usePokemonList";
-export const Pokemon = () => {
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
-  const { state } = usePokemonList();
+export const Pokemon = () => {
+  const { state, loadNextPage } = usePokemonList();
+  const triggerRef = useRef(null);
+
+  useIntersectionObserver({
+    targetRef: triggerRef,
+    onIntersect: loadNextPage,
+    enabled: state.hasMore,
+  });
 
   return (
     <>
@@ -17,7 +25,13 @@ export const Pokemon = () => {
         {(pokemon) => <PokemonCard key={pokemon.id} pokemon={pokemon} />}
       </PokemonMainGrid>
 
-      {/* {!state.loading && <Outlet context={setState}/>} */}
+      {state.hasMore && (
+        <div ref={triggerRef} className="flex justify-center mt-4 py-8">
+          {state.loadingNextPage && (
+            <p className="text-white">Loading more Pokémon...</p>
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -23,7 +23,7 @@ export async function getPokemonList(url) {
       }
       return newObj
     })
-    return mappedData
+    return { pokemon: mappedData, nextUrl: data.next }
 
   } catch(error) {
     throw error
