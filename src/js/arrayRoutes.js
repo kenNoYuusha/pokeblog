@@ -5,7 +5,7 @@ routes.push({
 });
 
 routes.push({
-  to: "/pokemon",
+  to: "/pokedex",
   text: "Pokedex",
 })
 export { routes }

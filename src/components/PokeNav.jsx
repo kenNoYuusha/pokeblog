@@ -9,7 +9,7 @@ export const PokeNav = ({darkMode, setDarkMode}) => {
 
   return (
     <div className="hidden h-14 justify-between items-center p-4 bg-slate-50 shadow-md text-slate-900
-                    dark:bg-slate-900 dark:text-slate-50          
+                    dark:bg-zinc-900 dark:text-slate-50          
                     lg:flex"
     >
       <ul
