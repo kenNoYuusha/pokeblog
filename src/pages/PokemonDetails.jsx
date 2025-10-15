@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 //OTHERS
 import { getPokemon, getResource } from "../api/pokemon";
@@ -10,14 +10,16 @@ import { PokemonContainerDetails } from "../components/PokemonContainerDetails";
 import { PokemonError } from "../components/PokemonError";
 
 export const PokemonDetails = () => {
-  //const renderCount = useRef("")
-  const setDisplayParent = useOutletContext();
   const { pokemonName } = useParams();
   const [error, setError] = useState({ isError: false });
   const [loading, setLoading] = useState(true);
   const [pokemonInfo, setPokemonInfo] = useState({});
 
   useEffect(() => {
+    setLoading(true);
+    setError({ isError: false });
+    setPokemonInfo({});
+
     const getPokemonDetails = async () => {
       try {
         //getting basic info
@@ -61,16 +63,15 @@ export const PokemonDetails = () => {
         }
 
         setPokemonInfo(pokemonDetails);
-        setLoading(false);
       } catch (err) {
         setError({ isError: true, ...err });
+      } finally {
+        setLoading(false);
       }
     };
     getPokemonDetails();
-    setDisplayParent((state) => ({ ...state, display: false }));
-    return () => setDisplayParent((state) => ({ ...state, display: true }));
-  }, [pokemonName])
- 
+  }, [pokemonName]);
+
   return (
     <PokemonContainerDetails
       error={error}

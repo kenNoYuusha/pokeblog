@@ -22,7 +22,7 @@ export const PokemonContainerDetails = ({
   } = pokemonInfo;
   const navigate = useNavigate();
   const closeHandler = () => {
-    navigate("/pokemon");
+    navigate("/pokedex");
   };
 
   return (
