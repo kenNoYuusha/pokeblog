@@ -7,7 +7,7 @@ export function usePokemonList() {
     loading: true,
     loadingNextPage: false,
     pokemonList: [],
-    nextUrl: "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=30",
+    nextUrl: "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=25",
     hasMore: true,
   });
   const isLoadingRef = useRef(false);

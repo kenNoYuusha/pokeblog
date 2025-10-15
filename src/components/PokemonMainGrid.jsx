@@ -5,7 +5,7 @@ export const PokemonMainGrid = ({
   error: pokemonError,
 }) => {
   return (
-    <div className={`w-full h-auto grid grid-cols-pokeGrilla auto-rows-auto gap-4 px-4 py-8 text-lg`}>
+    <div className={`container mx-auto px-4 grid grid-cols-pokeGrilla auto-rows-auto gap-x-4 gap-y-6 py-8 text-lg`}>
       {error.isError && pokemonError(error)}
       {!error.isError && loading && pokemonList.length === 0 && (
         <PokemonSkeleton amount={30}>{skeleton}</PokemonSkeleton>

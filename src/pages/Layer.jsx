@@ -25,7 +25,7 @@ const Layer = () => {
 
   return (
     <div className={`block ${darkMode && "dark"}`}>
-      <div className="bg-slate-200 dark:bg-slate-700">
+      <div className="bg-slate-200 dark:bg-zinc-700">
         <PokeNav darkMode={darkMode} setDarkMode={setDarkMode} />
         <main className="relative w-full h-auto flex flex-col items-center">
           {isOffline && <Offline />}
